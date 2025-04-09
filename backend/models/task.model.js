@@ -10,3 +10,11 @@ exports.addTask = async ({ title, description, status, due }) => {
   const { rows } = await db.query(queryStr, [title, description, status, due]);
   return rows[0];
 };
+
+exports.fetchTask = async (id) => {
+  const { rows } = await db.query(`SELECT * FROM tasks WHERE id=$1`, [id]);
+  if (rows.length === 0) {
+    return Promise.reject({ status: 404, msg: "Task Not Found" });
+  }
+  return rows[0];
+};

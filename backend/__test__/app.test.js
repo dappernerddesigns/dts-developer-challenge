@@ -61,7 +61,35 @@ describe("/tasks", () => {
 });
 
 describe("/tasks/:id", () => {
-  describe("GET", () => {});
+  describe("GET", () => {
+    test("200:Server responds with the requested task", async () => {
+      const {
+        body: { task },
+      } = await request(app).get("/api/tasks/1").expect(200);
+      const { id, title, description, status, due } = task;
+      expect(id).toBe(1);
+      expect(title).toBe(
+        "ultrices mattis odio donec vitae nisi nam ultrices libero non mattis pulvinar nulla pede ullamcorper"
+      );
+      expect(description).toBe(
+        "odio curabitur convallis duis consequat dui nec nisi volutpat eleifend donec ut dolor"
+      );
+      expect(status).toBe("todo");
+      expect(due).toBe("2024-12-05T05:39:44.000Z");
+    });
+    test("404:Server responds with a task not found message for a valid request with no results", async () => {
+      const {
+        body: { msg },
+      } = await request(app).get("/api/tasks/99").expect(404);
+      expect(msg).toBe("Task Not Found");
+    });
+    test("400:Server responds with a bad request message for request with an invalid id", async () => {
+      const {
+        body: { msg },
+      } = await request(app).get("/api/tasks/one").expect(400);
+      expect(msg).toBe("Bad Request");
+    });
+  });
   describe("PATCH", () => {});
   describe("DELETE", () => {});
 });
