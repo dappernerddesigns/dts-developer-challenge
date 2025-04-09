@@ -8,7 +8,7 @@ const seed = async (tasks) => {
   title TEXT NOT NULL,
   description TEXT,
   status TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW())`);
+  due TIMESTAMP DEFAULT NOW())`);
 
   const formattedComments = tasks.map(
     ({ task_title, description, status, due }) => [
@@ -20,7 +20,7 @@ const seed = async (tasks) => {
   );
 
   const queryStr = format(
-    `INSERT INTO tasks(title, description,status,created_at) VALUES %L`,
+    `INSERT INTO tasks(title, description,status,due) VALUES %L`,
     formattedComments
   );
   await db.query(queryStr);
